@@ -5,26 +5,13 @@ date: "2023-02-13"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
-## R Markdown
+## Why I'm taking this course:
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+I want to continue expanding my knowledge of computing and become more proficient in modular program design. I’m interested in geospatial analysis, remote sensing, and environmental modeling; coming into Bren, I aimed to make a viable career out of these interests. I’m also planning to take the environmental modeling class next quarter, and feel that this class will help provide the skills necessary to succeed in that course.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
 
-## Including Plots
+## Data science background:
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Before coming to Bren, I had almost no experience with programming and all data manipulation/visualization was confined to programs such as Excel or ArcGIS. Since coming to Bren, I’ve taken ESM206 (Statistics and Data Analysis) and am currently enrolled in ESM 242 (Advanced Data Analysis). For my Group Project, I’ve learned how to use the geospatial packages in R, such as `terra` and `raster`, as well as the conservation spatial optimization package, `prioritizr`. Additionally, through an internship this past fall I gained experience building user-facing apps and land-use models in Google Earth Engine.
