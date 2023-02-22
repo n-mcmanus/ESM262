@@ -1,0 +1,38 @@
+
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+# call in the function for generating power
+source('R/apg_function.R')
+source('R/mps_conv_function.R')
+```
+
+
+Now we'll compute the power of a truck with a mass of 31752 kg and surface area of 16 m^2 at a range of different speeds: 
+
+```{r}
+# first convert kph speeds to mps
+speeds <- mps_conv(c(80, 120, 40, 5))
+# add on the only speed given in m/s
+speeds<- append(speeds, 30)
+
+
+# now run function with our different speeds
+truck_pwr <- apg(m = 31752, sa = 16, v = speeds)
+truck_pwr
+
+# put the power and speeds in one dataframe
+truck_speed_pwr <- data.frame(cbind(speed = speeds, power = truck_pwr))
+```
+
+
+Plot
+```{r}
+ggplot(data = truck_speed_pwr, aes(x = speed, y = truck_pwr)) +
+  geom_point() 
+```
+
