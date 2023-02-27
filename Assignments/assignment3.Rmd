@@ -30,9 +30,22 @@ truck_speed_pwr <- data.frame(cbind(speed = speeds, power = truck_pwr))
 ```
 
 
+What is the truck was lighter and weighed 15,000kg?
+```{r}
+truck_light_pwr <- apg(m = 15000, sa = 16, v = speeds)
+truck_light_speed_pwr <- data.frame(cbind(speed = speeds, power = truck_light_pwr))
+```
+
+
 Plot
 ```{r}
-ggplot(data = truck_speed_pwr, aes(x = speed, y = truck_pwr)) +
-  geom_point() 
+ggplot() +
+  geom_line(data = truck_speed_pwr, 
+            aes(x = speed, y = truck_pwr),
+            color = 'dodgerblue4', size = 1) +
+  geom_line(data = truck_light_speed_pwr, 
+            aes(x = speed, y = truck_light_pwr),
+            color = 'forestgreen', size = 1) +
+  theme_minimal()
 ```
 
