@@ -12,20 +12,13 @@ library(purrr)
 library(here)
 library(kableExtra)
 ```
-
-
+# 1) Compute the mean and max power for 4 cars, assuming that average highway speed is 80 kph with a std dev of 10 kph. Do this with both a for loop and `purrr::pmap`.
 
 4 car types:
-
 * car A mass 20000 kg, area 22 m^2
 * car B mass 65000 kg, area 30 m^2
 * car C mass 38000 kg, area 22 m^2
 * car D mass 5000 kg, area 10 m^2
-
-
-1) Compute the mean and max power for the 4 cars, assuming that average highway speed is 80 km/hr with a std dev of 10 km/hr
-- Do this with both a for loop and purrr::pmap
-
 
 ```{r}
 ### read in auto power and speed conversion functions
@@ -98,17 +91,83 @@ means_floop %>%
 
 Next, we'll find the mean and max on the same sample size of cars and speeds using `purrr::pmap`
 ```{r}
+### use same speed data as for loop
 
+### run pmap
+powerall2 = pmap(list(sa = possible_cars$area,
+                      m = possible_cars$mass), 
+                 apg, v = speeds)
+
+### convert pmap results into dataframe
+powerall2 = as.data.frame(powerall2, 
+                          col.names = possible_cars$name)
+
+### turn columns in to rows for plotting and finding means
+powerallr2 = powerall2 %>% 
+  pivot_longer(cols = everything(), 
+               names_to = "car", 
+               values_to = "power")
+
+### Find mean powers and return in nice table
+means_pmap <- powerallr2 %>% 
+  group_by(car) %>% 
+  summarize(mean = mean(power),
+            max = max(power))
+
+means_pmap %>% 
+  kable(caption = "**Table 2.** Mean and max powers for cars A-D using pmap method",
+        col.names = c("Car", "Mean power", "Max power")) %>% 
+  kable_styling(full_width = FALSE,
+                bootstrap_options = "hover",
+                position = "left")
 ```
 
 
+# 2) Create two boxplots (one for each method) that show the range of power consumption across sampled speeds by car type.
+
+```{r, fig.height=8, fig.width = 5}
+
+forLoop_plot <- ggplot(data = powerallr, 
+                       aes(x = car, y = power)) +
+  geom_jitter(aes(color = car), width = .13, alpha = 0.7, size = 1.5) +
+  scale_color_manual(values = c("sienna1", "mediumorchid1", "aquamarine2", "firebrick1")) +
+  geom_boxplot(fill = NA, outlier.color = NA, width = 0.6, lwd = 0.8, 
+               color = c("sienna4", "mediumorchid4", "aquamarine4", "firebrick4")) +
+  labs(x = "Car",
+       y = "Power (Watts)",
+       title = "For loop") +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    axis.title.x = element_text(vjust = 5, face = 'bold'),
+    axis.title.y = element_text(face = 'bold'),
+    axis.text.x = element_text(vjust = 7, face = 'bold', size = 9),
+    axis.text.y = element_text(size = 8),
+    legend.position = 'none')
 
 
-```{r}
-# quick visualization
-forLoop_plot = ggplot(powerallr, aes(car,power, fill=car))+geom_boxplot()+ggtitle("For Loop")
-forLoop_plot
 
-ggarrange(method1_plot, method2_plot, method3_plot, nrow=3)
+pmap_plot <- ggplot(data = powerallr2, 
+                    aes(x = car, y = power)) +
+  geom_jitter(aes(color = car), width = .13, alpha = 0.7, size = 1.5) +
+  scale_color_manual(values = c("sienna1", "mediumorchid1", "aquamarine2", "firebrick1")) +
+  geom_boxplot(fill = NA, outlier.color = NA, width = 0.6, lwd = 0.8, 
+               color = c("sienna4", "mediumorchid4", "aquamarine4", "firebrick4")) + 
+  labs(x = "Car",
+       y = "Power (Watts)",
+       title = "pmap") +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    axis.title.x = element_text(vjust = 5, face = 'bold'),
+    axis.title.y = element_text(face = 'bold'),
+    axis.text.x = element_text(vjust = 7, face = 'bold', size = 9),
+    axis.text.y = element_text(size = 8),
+    legend.position = 'none')
+
+ggarrange(forLoop_plot, pmap_plot, 
+          labels = c("A", "B"), 
+          hjust = -2,
+          nrow=2)
 ```
 
