@@ -1,0 +1,52 @@
+
+
+
+```{r}
+library(here)
+```
+
+```{r}
+### read in function
+source(here('Assignments/R/npv_function.R'))
+```
+
+```{r}
+possible_npv = 0
+
+
+damages <- c(25, 32, 90, 60)
+disc_rates = seq(from=0.01, to=0.04, by=0.005)
+yrs = 20
+
+npvs <- as.data.frame(matrix(nrow =length(damages), ncol=length(disc_rates)))
+```
+
+```{r}
+for (i in 1:length(damages)) {
+  for (j in 1:length(disc_rates)) {
+    npvs[i, j] = npv(r = damages[i], 
+                     i = disc_rates[j],
+                     t = yrs)
+  }
+}
+```
+
+```{r}
+### make it better
+colnames(npvs) = disc_rates
+rownames(npvs) = damages
+
+## make it in tidy format to graph
+
+npvs$damage = damages
+npvsg = npvs %>% 
+  pivot_longer(!damage, names_to = 'dis', values_to = 'npv')
+```
+
+
+
+
+
+
+
+

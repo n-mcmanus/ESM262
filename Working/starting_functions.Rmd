@@ -171,3 +171,8 @@ e.g. **power_gen_orig.R**
 *  Eventually we will want our function to be part of a package (a library of many functions) - to create a package you must use this convention (name.R) place all function in a directory called “R”
 
 
+Notes:
+- you can use #' @param for documentation at the start of a function for help if made into a package
+
+
+

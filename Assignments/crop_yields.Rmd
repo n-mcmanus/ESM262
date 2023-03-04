@@ -1,0 +1,25 @@
+
+```{r}
+fert <- rnorm(mean = 5, sd=0.5, n=10)
+
+yields = data.frame(fertilizer = fert, yield = NA)
+
+total_yield = 0
+
+### for loop
+for (i in 1:10) {
+  total_yield = total_yield + (1.8 * (fert[i]^2) - 0.5 * fert[i] + 0.1 * 20)
+}
+```
+
+Task 2
+```{r}
+### using function
+source('R/crop_yield_function.R')
+```
+
+Task 3
+```{r}
+
+```
+
