@@ -2,6 +2,14 @@
 title: 'Assignment 3'
 author: "Nick McManus"
 date: "3 March 2023"
+output: 
+ html_document: 
+    toc: yes
+    toc_float: yes
+    theme: cerulean
+    code_folding: show
+    smooth_scroll: yes
+    collapsed: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -11,14 +19,20 @@ library(tidyverse)
 library(purrr)
 library(here)
 library(kableExtra)
+library(ggpubr)
 ```
-# 1) Compute the mean and max power for 4 cars, assuming that average highway speed is 80 kph with a std dev of 10 kph. Do this with both a for loop and `purrr::pmap`.
+
+# Task 1
+***
+
+Compute the mean and max power for 4 cars, assuming that average highway speed is 80 kph with a std dev of 10 kph. Do this with both a for loop and `purrr::pmap`.
 
 4 car types:
-* car A mass 20000 kg, area 22 m^2
-* car B mass 65000 kg, area 30 m^2
-* car C mass 38000 kg, area 22 m^2
-* car D mass 5000 kg, area 10 m^2
+
+-   car A mass 20000 kg, area 22 m\^2
+-   car B mass 65000 kg, area 30 m\^2
+-   car C mass 38000 kg, area 22 m\^2
+-   car D mass 5000 kg, area 10 m\^2
 
 ```{r}
 ### read in auto power and speed conversion functions
@@ -33,12 +47,15 @@ possible_cars <- data.frame(name = c("A","B","C","D"),
 ### convert avg speed to mps
 base_speed <- mps_conv(80)
 
-possible_cars$power = apg(v=speed_base, 
+possible_cars$power = apg(v=base_speed, 
                           sa = possible_cars$area,
                           m=possible_cars$mass)
 
 # head(possible_cars)
 ```
+
+
+## For loop:
 
 First we'll automate this task using a for loop on a sample of 200 log normally distributed speeds. The standard deviation (10kph) is 8% of the mean speed
 ```{r}
@@ -78,16 +95,18 @@ powerallr = powerall %>%
 means_floop <- powerallr %>% 
   group_by(car) %>% 
   summarize(mean = mean(power),
+            median = median(power),
             max = max(power))
 
 means_floop %>% 
-  kable(caption = "**Table 1.** Mean and max powers for cars A-D using for-loop method",
-        col.names = c("Car", "Mean power", "Max power")) %>% 
+  kable(caption = "**Table 1.** Sample statistics for car powers using for-loop method",
+        col.names = c("Car", "Mean power", "Median power", "Max power")) %>% 
   kable_styling(full_width = FALSE,
                 bootstrap_options = "hover",
                 position = "left")
 ```
 
+## Pmap:
 
 Next, we'll find the mean and max on the same sample size of cars and speeds using `purrr::pmap`
 ```{r}
@@ -112,18 +131,21 @@ powerallr2 = powerall2 %>%
 means_pmap <- powerallr2 %>% 
   group_by(car) %>% 
   summarize(mean = mean(power),
+            median = median(power),
             max = max(power))
 
 means_pmap %>% 
-  kable(caption = "**Table 2.** Mean and max powers for cars A-D using pmap method",
-        col.names = c("Car", "Mean power", "Max power")) %>% 
+  kable(caption = "**Table 2.** Sample statistics for car powers using pmap method",
+        col.names = c("Car", "Mean power", "Median power", "Max power")) %>% 
   kable_styling(full_width = FALSE,
                 bootstrap_options = "hover",
                 position = "left")
 ```
 
+# Task 2
+***
 
-# 2) Create two boxplots (one for each method) that show the range of power consumption across sampled speeds by car type.
+Create two boxplots (one for each method) that show the range of power consumption across sampled speeds by car type.
 
 ```{r, fig.height=8, fig.width = 5}
 
@@ -141,7 +163,7 @@ forLoop_plot <- ggplot(data = powerallr,
     panel.grid.major.x = element_blank(),
     axis.title.x = element_text(vjust = 5, face = 'bold'),
     axis.title.y = element_text(face = 'bold'),
-    axis.text.x = element_text(vjust = 7, face = 'bold', size = 9),
+    axis.text.x = element_text(vjust = 5, face = 'bold', size = 9),
     axis.text.y = element_text(size = 8),
     legend.position = 'none')
 
@@ -161,7 +183,7 @@ pmap_plot <- ggplot(data = powerallr2,
     panel.grid.major.x = element_blank(),
     axis.title.x = element_text(vjust = 5, face = 'bold'),
     axis.title.y = element_text(face = 'bold'),
-    axis.text.x = element_text(vjust = 7, face = 'bold', size = 9),
+    axis.text.x = element_text(vjust = 5, face = 'bold', size = 9),
     axis.text.y = element_text(size = 8),
     legend.position = 'none')
 
@@ -171,3 +193,8 @@ ggarrange(forLoop_plot, pmap_plot,
           nrow=2)
 ```
 
+**Figure 1.** The range of power consumption for four cars with differing mass and surface area. Power consumption was calculated based on a sample of 200 log normally distributed highway speeds. Fig 1a displays the results using a for loop method, while Fig 1b shows the results using pmap. Both methods produced identical results, with a mean power consumption of `r means_floop$mean[1]`, `r means_floop$mean[2]`, `r means_floop$mean[3]` and `r means_floop$mean[4]` for Cars A, B, C and D, respectively.
+
+<br>
+
+As displayed in Figure 1 and Tables 1 and 2, the power consumption values are identical for both methods. The range of power consumption for each car is positively skewed, with a mean greater than the median. This is because power consumed is a function of speed cubed. Even for a log-normal distribution of speeds, those on the higher end result in exponentially greater power consumption.
