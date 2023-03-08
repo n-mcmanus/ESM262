@@ -12,13 +12,13 @@ library(tidyverse)
 library(here)
 ```
 
-
+In this assignment, we'll read in a list of fish types. Then we'll run this list through a function that returns the most common and rarest fish, as well as the total number of fish.
 ```{r}
 ### read in fish txt file
-fish <- read.delim(here('Assignments/fish.txt'))
+fish <- read.delim(here('data/fish.txt'))
 
 ### read in fish function
-source(here('Assignments/R/fish_function.R'))
+source(here('R/fish_function.R'))
 
 ### find the answers!
 fish_results <- fish_counts(fish)
