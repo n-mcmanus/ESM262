@@ -1,0 +1,33 @@
+---
+title: "Assignment 4"
+author: "Nick McManus"
+date: "2023-03-06"
+output: html_document
+---
+
+```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+```
+
+
+```{r}
+### read in fish txt file
+fish <- read.delim(here('Assignments/fish.txt'))
+
+### read in fish function
+source(here('Assignments/R/fish_function.R'))
+
+### find the answers!
+fish_results <- fish_counts(fish)
+fish_results
+```
+
+
+
+
+
+
+
