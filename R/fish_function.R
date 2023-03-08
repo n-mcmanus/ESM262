@@ -11,5 +11,5 @@ fish_counts <- function(fish) {
   
   fish_list <- c(common_fish, rarest_fish, total_count)
   
-  return(print("the fish is.." fish_list)
+  return(fish_list)
 }
